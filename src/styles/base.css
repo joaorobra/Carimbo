@@ -1,0 +1,115 @@
+@import "./tokens.css";
+@import "./themes.css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+/* Mount points must fill the viewport so the app's height:100% chain resolves;
+   without this the div collapses to content height and the layout only fills
+   the top strip of the window. */
+#app {
+  height: 100%;
+}
+
+/* Palette window is frameless + transparent; its root fills the window so the
+   card can stretch to the full height. */
+#palette {
+  height: 100%;
+}
+
+/* Disambiguation window: frameless + transparent; root fills the window so the
+   list card can stretch to the full height. */
+#radial {
+  height: 100%;
+}
+
+/* Color-picker preview window: frameless + transparent, follows the cursor. */
+#colorpicker {
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--fs-base);
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--selection-bg);
+}
+
+/* Visible keyboard focus everywhere; never remove without a replacement. */
+:focus-visible {
+  outline: var(--focus-ring-width) solid var(--accent);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: var(--radius-sm);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* Respect the user's motion preference; also toggleable in-app via data-motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    /* Zero delays too, or a staggered list-entrance (animation-delay per index)
+       still reveals rows one-by-one — motion in all but name. */
+    animation-delay: 0s !important;
+    transition-delay: 0s !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+:root[data-motion="reduce"] *,
+:root[data-motion="reduce"] *::before,
+:root[data-motion="reduce"] *::after {
+  animation-duration: 0.001ms !important;
+  transition-duration: 0.001ms !important;
+  animation-delay: 0s !important;
+  transition-delay: 0s !important;
+}
+
+/* Palette window is frameless + transparent; the card provides the surface. */
+.palette-body {
+  background: transparent;
+  overflow: hidden;
+}
+
+/* Disambiguation window is fully transparent; the list card floats over the desktop. */
+.radial-body {
+  background: transparent;
+  overflow: hidden;
+}
+
+/* Color-picker preview window floats over everything while picking. */
+.colorpicker-body {
+  background: transparent;
+  overflow: hidden;
+}

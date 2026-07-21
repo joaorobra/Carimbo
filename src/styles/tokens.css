@@ -1,0 +1,59 @@
+/* Design tokens — single source of truth for spacing, radius, typography.
+   Colors live in themes.css and are swapped via [data-theme]. */
+:root {
+  /* Font scale is user-adjustable (accessibility). All sizes derive from it. */
+  --font-scale: 1;
+
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "Cascadia Code", "Consolas", ui-monospace, monospace;
+
+  --fs-xs: calc(0.75rem * var(--font-scale));
+  --fs-sm: calc(0.875rem * var(--font-scale));
+  --fs-base: calc(1rem * var(--font-scale));
+  --fs-lg: calc(1.125rem * var(--font-scale));
+  --fs-xl: calc(1.375rem * var(--font-scale));
+  /* Top of the ramp widened a touch so display headings (e.g. onboarding,
+     empty-state titles) have more presence than the previous --fs-xl ceiling. */
+  --fs-2xl: calc(1.75rem * var(--font-scale));
+
+  /* Pair with --fs-xl/--fs-2xl on display headings; body text keeps the
+     default tracking/weight. */
+  --tracking-tight: -0.02em;
+  --weight-heading: 650;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* Minimum interactive target — bumped by the "large rows" density toggle. */
+  --hit-target: 32px;
+
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+
+  /* Purposeful motion: short + eased. Gated by prefers-reduced-motion and the
+     in-app data-motion="reduce" toggle in base.css.
+     --ease-out is a gentler settle for larger moves (panel/menu reveals);
+     --ease-spring overshoots slightly for a livelier pop (palette open, an
+     entrance stagger) — reach for it deliberately, not as the new default.
+     --stagger is the per-item delay step for list entrance staggers; multiply
+     by index in the component (e.g. `animation-delay: calc(var(--stagger) * i)`). */
+  --ease: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --transition-fast: 120ms var(--ease);
+  --transition: 160ms var(--ease);
+  --transition-slow: 280ms var(--ease-out);
+  --stagger: 24ms;
+}
+
+:root[data-density="comfortable"] {
+  --hit-target: 44px;
+}

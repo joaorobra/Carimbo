@@ -1,0 +1,89 @@
+[package]
+name = "carimbo"
+version = "0.1.0"
+description = "Carimbo — snippet manager and clipboard history toolbelt"
+authors = ["Carimbo"]
+edition = "2021"
+rust-version = "1.77"
+# `tauri dev` runs plain `cargo run`; without this it refuses to pick between
+# the app binary and the spike binaries.
+default-run = "carimbo"
+
+# The library the app binary and the spike binaries all share.
+[lib]
+name = "carimbo_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[[bin]]
+name = "carimbo"
+path = "src/main.rs"
+
+# --- M0 risk spikes (throwaway; kept out of release bundles) ---
+[[bin]]
+name = "spike_focus"
+path = "spikes/focus.rs"
+
+[[bin]]
+name = "spike_hook"
+path = "spikes/hook.rs"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["tray-icon", "protocol-asset"] }
+tauri-plugin-single-instance = "2"
+tauri-plugin-global-shortcut = "2"
+tauri-plugin-autostart = "2"
+tauri-plugin-dialog = "2"
+
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+uuid = { version = "1", features = ["v4"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+tracing-appender = "0.2"
+
+# Data layer. `bundled` compiles SQLite from source (includes FTS5); `functions`
+# lets us register a custom collation/function if needed later.
+rusqlite = { version = "0.32", features = ["bundled", "functions"] }
+# Time handling for created_at/updated_at (unix ms) and {date}/{time} tokens.
+time = { version = "0.3", features = ["formatting", "macros", "local-offset"] }
+# Stable content hashing for clipboard dedupe (SHA-256).
+sha2 = "0.10"
+# Clipboard image capture: read CF_DIB and write PNGs for history thumbnails.
+image = { version = "0.25", default-features = false, features = ["png"] }
+# High-level clipboard reads (text + images as RGBA). We keep our own raw Win32
+# module for the precise save/restore-around-paste dance; arboard is just for
+# reading history entries robustly (handles CF_DIB decoding).
+arboard = "3"
+
+# Windows integration. Feature list is deliberately explicit so we pull only
+# the Win32 surface we use (clipboard, low-level input, foreground window).
+[target.'cfg(windows)'.dependencies.windows]
+version = "0.58"
+features = [
+  "Win32_Foundation",
+  "Win32_UI_WindowsAndMessaging",
+  "Win32_UI_Input_KeyboardAndMouse",
+  "Win32_System_DataExchange",
+  "Win32_System_Memory",
+  "Win32_System_Ole",
+  "Win32_UI_Shell",
+  "Win32_System_Threading",
+  "Win32_System_LibraryLoader",
+  "Win32_Security",
+  "Win32_Security_Authorization",
+  "Win32_Globalization",
+  "Win32_Graphics_Gdi",
+  # Drop the Win11 accent-colored border DWM draws on our frameless main window.
+  "Win32_Graphics_Dwm",
+]
+
+[profile.release]
+panic = "abort"
+codegen-units = 1
+lto = true
+opt-level = "s"
+strip = true

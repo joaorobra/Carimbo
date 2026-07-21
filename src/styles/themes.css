@@ -1,0 +1,175 @@
+/* Themes are token sets selected by [data-theme] on <html>.
+   Contrast: HC themes target >= 7:1 (AAA) body text; others >= 4.5:1.
+
+   Brand accent is a steel-blue "ink" (Carimbo = rubber stamp): deliberately
+   distinct in hue from --danger (red) and --star (amber) so the three never
+   get confused at a glance, in any theme. --accent-text on --accent is
+   verified >= 4.5:1 in light/dark and >= 7:1 in the two hc- themes (see the
+   per-theme notes below for the computed ratio).
+
+   Elevation: --shadow-sm/--shadow/--elev-1/2/3 form one soft, layered scale
+   (ambient shadow + a hairline top inner-highlight) used for progressively
+   "higher" surfaces — 1 = a resting card, 2 = a popover/menu, 3 = a floating
+   window (palette/radial). HC/forced-colors themes collapse all of these to a
+   flat 1px border ring instead of simulating depth with color. */
+
+/* Light (default when OS is light) */
+:root,
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f6f7f9;
+  --bg-elevated: #ffffff;
+  --bg-inset: #eceef1;
+  /* Neutral hover wash — distinct from --accent-weak (which now means "selected")
+     and --bg-inset (input wells, badges). */
+  --bg-hover: color-mix(in srgb, var(--text) 6%, transparent);
+  --border: #d3d7de;
+  --border-strong: #b6bcc6;
+  --text: #1a1d23;
+  --text-muted: #5b6270;
+  /* accent vs accent-text = 4.65:1 (AA). */
+  --accent: #4977ab;
+  --accent-text: #ffffff;
+  --accent-weak: #e6eef6;
+  --danger: #b3261e;
+  --success: #1f7a45;
+  --star: #d99000;
+  /* Semi-opaque --bg-elevated for glass surfaces (palette/radial), paired with
+     `backdrop-filter: blur(...) saturate(...)` by the consuming component. The
+     alpha is user-tunable via the Settings "palette transparency" slider, which
+     sets --glass-opacity on <html> (default 0.72; falls back here if unset). */
+  --surface-glass: rgba(255, 255, 255, var(--glass-opacity, 0.72));
+  --shadow-sm: 0 1px 2px rgba(20, 24, 33, 0.1);
+  --shadow: 0 1px 1px rgba(20, 24, 33, 0.06), 0 8px 24px rgba(20, 24, 33, 0.14);
+  --elev-1: 0 1px 2px rgba(20, 24, 33, 0.08), 0 2px 6px rgba(20, 24, 33, 0.06);
+  --elev-2:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 2px 6px rgba(20, 24, 33, 0.08),
+    0 10px 24px rgba(20, 24, 33, 0.12);
+  --elev-3:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 4px 12px rgba(20, 24, 33, 0.1),
+    0 20px 48px rgba(20, 24, 33, 0.18);
+  --scrim: rgba(20, 24, 33, 0.32);
+  --selection-bg: var(--accent-weak);
+}
+
+/* Dark (default when OS is dark) */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  /* Cooler/deeper than the ubiquitous #14161a, with more headroom before
+     --bg-elevated so cards/menus/popovers read as clearly lifted rather than
+     a barely-there tint change. */
+  --bg: #101219;
+  --bg-elevated: #1c2030;
+  --bg-inset: #0a0c11;
+  --bg-hover: color-mix(in srgb, var(--text) 8%, transparent);
+  --border: #2c313e;
+  --border-strong: #3f4657;
+  --text: #e8eaed;
+  --text-muted: #9aa1ad;
+  /* accent vs accent-text = 8.0:1 (AA); a lightened steel-blue so the same
+     #4977ab hue stays legible as text on the dark surfaces (accent vs bg =
+     7.6:1). */
+  --accent: #7ea9d6;
+  --accent-text: #0b0d10;
+  --accent-weak: #1e2c3f;
+  --danger: #f2645a;
+  --success: #4cc37e;
+  --star: #f5b830;
+  --surface-glass: rgba(28, 32, 48, var(--glass-opacity, 0.72));
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.45);
+  --shadow: 0 1px 0 rgba(255, 255, 255, 0.04), 0 10px 32px rgba(0, 0, 0, 0.55);
+  --elev-1: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3);
+  --elev-2:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 2px 8px rgba(0, 0, 0, 0.35),
+    0 12px 28px rgba(0, 0, 0, 0.45);
+  --elev-3:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 4px 16px rgba(0, 0, 0, 0.4),
+    0 24px 56px rgba(0, 0, 0, 0.6);
+  --scrim: rgba(0, 0, 0, 0.55);
+  --selection-bg: var(--accent-weak);
+}
+
+/* High-contrast light */
+:root[data-theme="hc-light"] {
+  color-scheme: light;
+  --bg: #ffffff;
+  --bg-elevated: #ffffff;
+  --bg-inset: #f0f0f0;
+  --bg-hover: #e6e6e6;
+  --border: #000000;
+  --border-strong: #000000;
+  --text: #000000;
+  --text-muted: #1a1a1a;
+  /* accent vs accent-text = 8.9:1 (AAA). */
+  --accent: #0f4c81;
+  --accent-text: #ffffff;
+  --accent-weak: #d3e2f4;
+  --danger: #a80000;
+  --success: #005a20;
+  --star: #8a5a00;
+  /* No real translucency in HC — glass falls back to a fully opaque surface. */
+  --surface-glass: #ffffff;
+  /* HC keeps depth legible as a border ring, never simulated with shadow. */
+  --shadow: 0 0 0 1px #000000;
+  --shadow-sm: 0 0 0 1px #000000;
+  --elev-1: 0 0 0 1px #000000;
+  --elev-2: 0 0 0 1px #000000;
+  --elev-3: 0 0 0 1px #000000;
+  --scrim: rgba(0, 0, 0, 0.6);
+  --selection-bg: #ffea00;
+}
+
+/* High-contrast dark */
+:root[data-theme="hc-dark"] {
+  color-scheme: dark;
+  --bg: #000000;
+  --bg-elevated: #000000;
+  --bg-inset: #0a0a0a;
+  --bg-hover: #1a1a1a;
+  --border: #ffffff;
+  --border-strong: #ffffff;
+  --text: #ffffff;
+  --text-muted: #e6e6e6;
+  /* accent vs accent-text = 11.6:1 (AAA). */
+  --accent: #a9caea;
+  --accent-text: #000000;
+  --accent-weak: #002a5c;
+  --danger: #ff7b72;
+  --success: #6bff9e;
+  --star: #ffd633;
+  --surface-glass: #000000;
+  --shadow: 0 0 0 1px #ffffff;
+  --shadow-sm: 0 0 0 1px #ffffff;
+  --elev-1: 0 0 0 1px #ffffff;
+  --elev-2: 0 0 0 1px #ffffff;
+  --elev-3: 0 0 0 1px #ffffff;
+  --scrim: rgba(0, 0, 0, 0.72);
+  --selection-bg: #ffea00;
+}
+
+/* When the OS is in a Windows Contrast Theme, WebView2 sets forced-colors.
+   Defer to system colors for the essentials so we never fight the OS. */
+@media (forced-colors: active) {
+  :root {
+    --bg: Canvas;
+    --bg-elevated: Canvas;
+    --bg-inset: Canvas;
+    --bg-hover: Canvas;
+    --text: CanvasText;
+    --text-muted: CanvasText;
+    --border: CanvasText;
+    --border-strong: CanvasText;
+    --accent: Highlight;
+    --accent-text: HighlightText;
+    --accent-weak: Canvas;
+    --star: CanvasText;
+    /* No compositing under forced-colors: glass becomes a plain solid Canvas
+       and shadows collapse to the 1px border ring set per hc-theme above. */
+    --surface-glass: Canvas;
+    --selection-bg: Highlight;
+  }
+}
